@@ -76,10 +76,13 @@ sits_timeline(cubo_tile_034018_g4)
 
 # Cubo com amostras da máscara -------------------------------------------------------------------------------------------------------------
 
+library(sf)
+read_sf("Tile_034018_amostras_classificacao123_treinadas_manual_classes_B.shp")
+
 cubo_samples_tile_034018_g4 <- sits_get_data(
   cubo_tile_034018_g4, # Cubo geral com bandas e índices selecionados para o tile 034018
   samples = "Tile_034018_amostras_classificacao123_treinadas_manual_classes_B.shp", # Arquivo shapefile do tile 034018
-  label_attr = "Classe", # Coluna que indica as classes das amostras (pontos)
+  label_attr = "classe_b", # Coluna que indica as classes das amostras (pontos)
   bands = c("B11", "DBSI", "NDII", "NDVI"), 
   memsize = 7,
   multicores = 2, # Número de núcleos a serem usados. Quanto maior, mais rápido o processamento
@@ -154,8 +157,10 @@ sits_colors_set(tibble(
 
 # Clustering de séries temporais - SOM
 
+## Sem balanceamento
+
 som_cluster_034018_g4 <- sits_som_map(
-  data = cubo_samples_tile_034018_bal_g4, # SOM feito com o nosso grupo de amostras 
+  data = cubo_samples_tile_034018_g4, # SOM feito com o nosso grupo de amostras 
   grid_xdim = 10, # Grade eixo x. Aqui é 10 x 10 para gerar 100 neurônios
   grid_ydim = 10, # Grade eixo y
   distance = "dtw", # Método de calcular a distância,
