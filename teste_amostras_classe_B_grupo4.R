@@ -63,8 +63,8 @@ sits_bands(cubo_tile_034018_dbsi)
 
 ## Salvar cubo com novos índices do grupo 4
 
-saveRDS(cubo_caatinga_ndii_dbsi, file = "cubo_tile_034018_g4.rds") 
-cubo_tile_034018_g4 <- readRDS("cubo_caatinga_g4.rds")
+saveRDS(cubo_tile_034018_dbsi, file = "cubo_tile_034018_g4.rds") 
+cubo_tile_034018_g4 <- readRDS("cubo_tile_034018_g4.rds")
 
 # Verificar informações sobre o cubo -------------------------------------------------------------------------------------------------------
 
