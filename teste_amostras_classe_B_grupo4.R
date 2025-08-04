@@ -284,6 +284,11 @@ cubo_select_tile_034018_g4 <- sits_select(data = cubo_tile_034018_g4,
 
 view(cubo_select_tile_034018_g4$file_info)
 
+# Salvar cubo para classificação 
+
+saveRDS(cubo_select_tile_034018_g4, file = "cubo_select_tile_034018_g4.rds")
+cubo_select_tile_034018_g4 <- readRDS("cubo_select_tile_034018_g4.rds")
+
 # Treinar modelo Random Forest -------------------------------------------------------------------------------------------------------------
 
 ## Treinar modelo Random Forest das amostras limpas
@@ -298,14 +303,21 @@ rf_model_034018_g4 <- sits_train(
 
 plot(rf_model_034018_g4)
 
+## Salvar modelo RF
+
+saveRDS(rf_model_034018_g4, "rf_model_034018_g4.rds")
+rf_model_034018_g4 <- readRDS("rf_model_034018_g4.rds")
+View(rf_model_034018_g4)
+
 # Produzir mapa de probabilidades de classes -----------------------------------------------------------------------------------------------
 
 tempdir_r <- "mapa_probabilidades_034018_g4"
 dir.create(tempdir_r, showWarnings = FALSE, recursive = TRUE)
 
-torch::install_torch()
-torch::install_torch(reinstall = FALSE)
-torch::jit_load()
+torch::install_torch(type = "cpp", reinstall = TRUE)
+torch::torch_is_installed()
+packageVersion("torch")
+torch::torch_la
 
 probs_034018_g4 <- sits_classify(
   data = cubo_select_tile_034018_g4, # Cubo principal com bandas e índices selecionados (sem amostras)
