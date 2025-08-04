@@ -314,10 +314,10 @@ View(rf_model_034018_g4)
 tempdir_r <- "mapa_probabilidades_034018_g4"
 dir.create(tempdir_r, showWarnings = FALSE, recursive = TRUE)
 
-torch::install_torch(type = "cpp", reinstall = TRUE)
+torch::install_torch(type = "cuda", reinstall = TRUE)
 torch::torch_is_installed()
 packageVersion("torch")
-torch::torch_la
+
 
 probs_034018_g4 <- sits_classify(
   data = cubo_select_tile_034018_g4, # Cubo principal com bandas e índices selecionados (sem amostras)
