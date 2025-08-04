@@ -347,16 +347,16 @@ smooth_034018_g4 <- sits_smooth(
 saveRDS(smooth_034018_g4, file = "smooth_034018_g4.rds")
 smooth_034018_g4 <- readRDS("smooth_034018_g4.rds")
 
-plot(smooth_034018_g4, labels = "Supressao", palette = "YlOrRd")
-plot(smooth_034018_g4, labels = "Veg_Natural", palette = "Greens")
+plot(smooth_034018_g4, labels = "supressao", palette = "YlOrRd")
+plot(smooth_034018_g4, labels = "veg_natural", palette = "Greens")
 
 # Rotulando o cubo de probabilidades - Classificações finais de amostras -------------------------------------------------------------------
 
 map_class_034018_g4 <- sits_label_classification(
   cube = smooth_034018_g4, 
   output_dir = tempdir_r, 
-  memsize = 14,
-  multicores = 5
+  memsize = 7,
+  multicores = 4
 )
 
 ## Salvar dados do cubo classificado
@@ -365,8 +365,8 @@ saveRDS(map_class_034018_g4, file = "map_class_034018_g4.rds")
 map_class_034018_g4 <- readRDS("map_class_034018_g4.rds")
 
 plot(map_class_034018_g4,
-     legend = c("Supressao" = "#bf812d",
-                "Veg_Natural" = "#01665e"))
+     legend = c("supressao" = "#bf812d",
+                "veg_natural" = "#01665e"))
 
 ## Visualização dos dados em mapa interativo
 
