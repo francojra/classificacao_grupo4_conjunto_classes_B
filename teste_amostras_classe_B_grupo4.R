@@ -9,6 +9,9 @@ library(tibble) # Pacote para visualizar tabelas
 library(sits) # Pacote para análises de séries temporais de imagens de satélite
 #library(sitsdata) # Pacote para obter conjunto de dados de amostras
 library(kohonen) # Pacote para plotar o mapa SOM
+library(randomForestExplainer)
+library(torch)
+torch::install_torch()
 
 # Estabelecer diretório de trabalho  -------------------------------------------------------------------------------------------------------
 
@@ -157,10 +160,10 @@ sits_colors_set(tibble(
 
 # Clustering de séries temporais - SOM
 
-## Sem balanceamento
+## Com balanceamento
 
 som_cluster_034018_g4 <- sits_som_map(
-  data = cubo_samples_tile_034018_g4, # SOM feito com o nosso grupo de amostras 
+  data = cubo_samples_tile_034018_bal_g4, # SOM feito com o nosso grupo de amostras 
   grid_xdim = 10, # Grade eixo x. Aqui é 10 x 10 para gerar 100 neurônios
   grid_ydim = 10, # Grade eixo y
   distance = "dtw", # Método de calcular a distância,
@@ -251,14 +254,14 @@ windows(width = 10, height = 6)
 plot(som_cluster_limpo_034018_g4, band = "DBSI")
 plot(som_cluster_limpo_034018_g4, band = "NDVI")
 plot(som_cluster_limpo_034018_g4, band = "B11")
-plot(som_cluster_limpo_034018_g4, band = "B04")
+plot(som_cluster_limpo_034018_g4, band = "NDII")
 
 # Avaliar matriz de confusão das amostras antes e após limpeza -----------------------------------------------------------------------------
 
 # Função de avaliação
 
-avaliacao_som_034018_g4 <- sits_som_evaluate_cluster(som_cluster_034018)
-avaliacao_som_limpo_034018_g4 <- sits_som_evaluate_cluster(som_cluster_limpo_034018)
+avaliacao_som_034018_g4 <- sits_som_evaluate_cluster(som_cluster_034018_g4)
+avaliacao_som_limpo_034018_g4 <- sits_som_evaluate_cluster(som_cluster_limpo_034018_g4)
 
 # Gráficos
 
@@ -300,11 +303,15 @@ plot(rf_model_034018_g4)
 tempdir_r <- "mapa_probabilidades_034018_g4"
 dir.create(tempdir_r, showWarnings = FALSE, recursive = TRUE)
 
+torch::install_torch()
+torch::install_torch(reinstall = FALSE)
+torch::jit_load()
+
 probs_034018_g4 <- sits_classify(
   data = cubo_select_tile_034018_g4, # Cubo principal com bandas e índices selecionados (sem amostras)
   ml_model = rf_model_034018_g4,
-  multicores = 4,
-  memsize = 15,
+  multicores = 3,
+  memsize = 7,
   output_dir = tempdir_r)
 
 ## Salvar dados do cubo de probabilidades
