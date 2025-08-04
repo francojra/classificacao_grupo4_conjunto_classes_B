@@ -10,8 +10,8 @@ library(sits) # Pacote para análises de séries temporais de imagens de satéli
 #library(sitsdata) # Pacote para obter conjunto de dados de amostras
 library(kohonen) # Pacote para plotar o mapa SOM
 library(randomForestExplainer)
-library(torch)
-torch::install_torch()
+# library(torch)
+# torch::install_torch()
 
 # Estabelecer diretório de trabalho  -------------------------------------------------------------------------------------------------------
 
@@ -314,11 +314,6 @@ View(rf_model_034018_g4)
 tempdir_r <- "mapa_probabilidades_034018_g4"
 dir.create(tempdir_r, showWarnings = FALSE, recursive = TRUE)
 
-torch::install_torch(type = "cuda", reinstall = TRUE)
-torch::torch_is_installed()
-packageVersion("torch")
-
-
 probs_034018_g4 <- sits_classify(
   data = cubo_select_tile_034018_g4, # Cubo principal com bandas e índices selecionados (sem amostras)
   ml_model = rf_model_034018_g4,
@@ -335,15 +330,15 @@ view(probs_034018_g4$file_info)
 
 ## Visualizar mapas de probabilidades
 
-plot(probs_034018_g4, labels = "Supressao", palette = "YlOrRd")
-plot(probs_034018_g4, labels = "Veg_Natural", palette = "Greens")
+plot(probs_034018_g4, labels = "supressao", palette = "YlOrRd")
+plot(probs_034018_g4, labels = "veg_natural", palette = "Greens")
 
 # Suavização do mapa de probabilidades -----------------------------------------------------------------------------------------------------
 
 smooth_034018_g4 <- sits_smooth(
   cube = probs_034018_g4,
   multicores = 4,
-  memsize = 14,
+  memsize = 7,
   output_dir = tempdir_r
 )
 
