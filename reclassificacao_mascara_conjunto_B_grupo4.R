@@ -106,15 +106,15 @@ getwd()
 caatinga_rec_2020 <- sits_reclassify(
     cube = caatinga_class,
     mask = prodes_2020,
-    rules = list("supressao 2000 - 2019" = mask == "mascara"), 
+    rules = list("supressao 2000 - 2019" = mask == "supressao"), # mantem vegetacao e desmatamento do mapa classificado
     multicores = 1,
     output_dir = tempdir_r,
     version = "reclass_final")
 
 caatinga_rec_2020 <- sits_reclassify(
   cube = caatinga_class,
-  mask = prodes_2020,
-  rules = list("supressao 2020" = cube == "supressao"), 
+  mask = caatinga_rec_2020,
+  rules = list("supressao 2020" = cube == "supressao"), # mantem vegetacao e desmatamento do mapa classificado
   multicores = 1,
   output_dir = tempdir_r,
   version = "reclass_final1")
@@ -124,6 +124,10 @@ caatinga_rec_2020 <- sits_reclassify(
 ## Todos os dados de desmatamento até 2019 estão sob a máscara do PRODES (em branco).
 ## Fora da máscara aparecem os dados de vegetação e os novos dados de supressão de 2020.
 ## Após inserir a máscara, toda a classificação é feita apenas fora dela.
+
+sits_colors_set(tibble(
+  name = c("supressao", "veg_natural", "supressao 2000 - 2019"),
+  color = c("brown", "#01665e", "white")))
 
 plot(caatinga_rec_2020,
      legend_text_size = 0.7)
