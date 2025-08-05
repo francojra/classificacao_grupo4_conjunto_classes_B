@@ -364,6 +364,10 @@ map_class_034018_g4 <- sits_label_classification(
 saveRDS(map_class_034018_g4, file = "map_class_034018_g4.rds")
 map_class_034018_g4 <- readRDS("map_class_034018_g4.rds")
 
+
+view(map_class_034018_g4)
+view(map_class_034018_g4$labels)
+
 plot(map_class_034018_g4,
      legend = c("supressao" = "#bf812d",
                 "veg_natural" = "#01665e"))
