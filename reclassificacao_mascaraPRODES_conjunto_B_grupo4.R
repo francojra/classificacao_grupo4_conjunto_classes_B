@@ -69,7 +69,7 @@ prodes_2020 <- sits_cube(
                     "tile", "start_date", "end_date",
                     "band", "version"),
     bands = "class",
-    version = "v2", # Versão do mapa PRODES
+    version = "v2", # Versão do mapa PRODES para não confundir com mapa classificado
     labels = c("1" = "supressao", "2" = "veg_natural", "3" = "mascara"))
 
 view(prodes_2020$labels)
@@ -91,12 +91,12 @@ getwd()
 caatinga_rec_2020 <- sits_reclassify(
     cube = caatinga_class,
     mask = prodes_2020,
-    rules = list("mascara" = mask %in% c("3"),
-                 "veg_natural" = cube %in% c("veg_natural"), # ou cube ou mask
-                 "supressao" = cube %in% c("supressao")),
+    rules = list("mascara" = mask %in% c("mascara"),
+                 "veg_natural" = mask %in% c("veg_natural"), # ou cube ou mask
+                 "supressao - 2020" = mask %in% c("supressao")),
     multicores = 1,
     output_dir = tempdir_r,
-    version = "reclass22")
+    version = "reclass23")
 
 ## Todos os dados de desmatamento até 2019 estão sob a máscara do PRODES (em branco).
 ## Fora da máscara aparecem os dados de vegetação e os novos dados de supressão de 2020.
