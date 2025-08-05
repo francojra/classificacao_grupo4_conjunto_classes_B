@@ -93,7 +93,7 @@ view(prodes_2020$labels)
 
 sits_colors_set(tibble(
   name = c("supressao", "veg_natural", "mascara"),
-  color = c("brown", "#01665e", "white")))
+  color = c("#543005", "#35978f", "white")))
 
 plot(prodes_2020) # A supressão está dentro da máscara com alguns pequenos pontos fora
 
@@ -121,7 +121,7 @@ caatinga_rec_2020 <- sits_reclassify(
 
 sits_colors_set(tibble(
   name = c("supressao 2020", "vegetação natural", "supressao 2000 - 2019"),
-  color = c("brown", "#01665e", "white")))
+  color = c("#543005", "#35978f", "white")))
 
 plot(caatinga_rec_2020,
      legend_text_size = 0.85)
