@@ -61,7 +61,7 @@ library(terra)
 r <- rast("SENTINEL-2_MSI_034018_2020-01-01_2020-12-18_class_v2.tif")
 
 unique(values(r)) # Vrificar pixls e máscara
-plot(is.na(r))
+plot(is.na(r), main = "Valores NA")
 plot(r)
 
 # Criar uma máscara lógica onde os valores são 1 ou 2
@@ -106,11 +106,12 @@ getwd()
 caatinga_rec_2020 <- sits_reclassify(
     cube = caatinga_class,
     mask = prodes_2020,
-    rules = list("supressao 2000 - 2019" = mask == "supressao",
-                 "supressao 2020" = cube == "supressao"), # mantem vegetacao e desmatamento do mapa classificado
+    rules = list("vegetação natural" = mask == "veg_natural",
+      "supressao 2000 - 2019" = mask == "supressao",
+                 "supressao 2020" = cube == "supressao"),
     multicores = 1,
     output_dir = tempdir_r,
-    version = "reclass_final888")
+    version = "reclass_final2")
 
 ## Reclassifica apenas os dados da mascara que é o desmatamento antes de 2020
 ## Mantem a classificação de vegetacao e supressao 2020 do cubo, nao reclassifica
@@ -119,11 +120,13 @@ caatinga_rec_2020 <- sits_reclassify(
 ## Após inserir a máscara, toda a classificação é feita apenas fora dela.
 
 sits_colors_set(tibble(
-  name = c("supressao 2020", "veg_natural", "supressao 2000 - 2019"),
+  name = c("supressao 2020", "vegetação natural", "supressao 2000 - 2019"),
   color = c("brown", "#01665e", "white")))
 
 plot(caatinga_rec_2020,
-     legend_text_size = 0.7)
+     legend_text_size = 0.85)
+
+# ### ---------------------------------------------------------------------
 
 # Considerando mascaras nas áreas externas a NA -----------------------------
 
