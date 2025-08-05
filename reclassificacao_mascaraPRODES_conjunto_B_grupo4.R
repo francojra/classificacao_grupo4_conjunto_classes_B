@@ -56,9 +56,9 @@ r <- rast("SENTINEL-2_MSI_034018_2020-01-01_2020-12-18_class_v2.tif")
 unique(values(r))
 unique(values(r)) # Vrificar pixls e máscara
 
-r_mask <- subst(r, NA, 3)
-r_mask[is.na(r_mask[])] <- 3
-unique(values(r_mask)) # Verificar pixels após redefinir NA da máscara por 3
+# r_mask <- subst(r, NA, 3)
+# r_mask[is.na(r_mask[])] <- 3
+# unique(values(r_mask)) # Verificar pixels após redefinir NA da máscara por 3
 
 prodes_2020 <- sits_cube(
     source = "BDC",
@@ -70,7 +70,7 @@ prodes_2020 <- sits_cube(
                     "band", "version"),
     bands = "class",
     version = "v2", # Versão do mapa PRODES para não confundir com mapa classificado
-    labels = c("1" = "supressao", "2" = "veg_natural", "3" = "mascara"))
+    labels = c("1" = "supressao", "2" = "veg_natural"))
 
 view(prodes_2020$labels)
 
@@ -91,13 +91,13 @@ getwd()
 caatinga_rec_2020 <- sits_reclassify(
     cube = caatinga_class,
     mask = prodes_2020,
-    rules = list("mascara" = mask %in% c("mascara"),
-                 "veg_natural" = mask %in% c("veg_natural"), # ou cube ou mask
-                 "supressao - 2020" = mask %in% c("supressao")),
+    rules = list("supressao 2007 - 2019" = mask %in% c("supressao")),
     multicores = 1,
     output_dir = tempdir_r,
-    version = "reclass23")
+    version = "reclass_final")
 
+## Reclassifica apenas os dados da mascara que é o desmatamento antes de 2020
+## Mantem a classificação de vegetacao e supressao 2020 do cubo, nao reclassifica
 ## Todos os dados de desmatamento até 2019 estão sob a máscara do PRODES (em branco).
 ## Fora da máscara aparecem os dados de vegetação e os novos dados de supressão de 2020.
 ## Após inserir a máscara, toda a classificação é feita apenas fora dela.
