@@ -33,5 +33,5 @@ cubo_caatinga_samples_g2_2024 <- sits_get_data(
   samples = "Tile_034018_amostras_classificacao123_treinadas_manual_classes_B.shp", # Arquivo shapefile da pasta do diretório de trabalho
   label_attr = "classe_b", # Coluna que indica as classes das amostras (pontos)
   multicores = 4,
-  bands = c("B03", "B04", "B08", "B11"), # Seleção das bandas que vão ser utilizadas
+  bands = c("B11"), # Seleção das bandas que vão ser utilizadas
   progress = TRUE) # Acompanhar carregamento
