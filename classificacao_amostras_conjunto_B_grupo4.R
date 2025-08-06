@@ -100,6 +100,7 @@ saveRDS(cubo_samples_tile_034018_g4, file = "cubo_samples_tile_034018_g4.rds")
 cubo_samples_tile_034018_g4 <- readRDS("cubo_samples_tile_034018_g4.rds")
 
 sits_bands(cubo_samples_tile_034018_g4)
+sits_labels(cubo_samples_tile_034018_g4)
 
 ## Visualizar amostras no Google Earth
 
@@ -114,12 +115,20 @@ plot(cubo_samples_tile_034018_g4)
 
 padroes_ts_samples_tile_034018_g4 <- sits_patterns(cubo_samples_tile_034018_g4) # Média harmônica das séries temporais com curva suavizada
 view(padroes_ts_samples_tile_034018_g4$time_series[[1]])
+
 p <- plot(padroes_ts_samples_tile_034018_g4)
 
 library(ggplot2)
 
+# Vetor de rótulos personalizados
+
+labels_personalizados <- c(
+  "veg_natural" = "Vegetação Natural",
+  "supressao" = "Supressão"
+)
+
 p + geom_line(linewidth = 1.2) + 
-  theme_bw()
+  theme_bw() 
 
 # Balanceamento de amostras ----------------------------------------------------------------------------------------------------------------
 
@@ -145,14 +154,11 @@ cubo_samples_tile_034018_bal_g4 <- sits_reduce_imbalance(
   n_samples_over = 170, 
   n_samples_under = 190) 
 
-summary(cubo_samples_tile_034018_bal_g4)
+summary(cubo_samples_tile_034018_g4)
 
 # Gerar SOM do tile 034018 -----------------------------------------------------------------------------------------------------------------
 
 ## Definir cores das classes
-
-cores <- sits_colors()
-view(cores)
 
 sits_colors_set(tibble(
   name = c("Supressao", "Veg_Natural"),
