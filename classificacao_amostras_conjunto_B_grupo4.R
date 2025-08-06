@@ -34,6 +34,9 @@ cubo_tile_034018 <- sits_cube(
   start_date = "2020-01-01", # Data inicial 
   end_date   = "2020-12-31") # Data final (período de 1 ano)
 
+sits_bands(cubo_tile_034018)
+sits_timeline(cubo_tile_034018)
+
 # Salvar arquivo do cubo em formato rds ----------------------------------------------------------------------------------------------------
 
 ## Salvando os dados, não precisa gerar o cubo das amostras novamente
@@ -128,7 +131,17 @@ labels_personalizados <- c(
 )
 
 p + geom_line(linewidth = 1.2) + 
-  theme_bw() 
+  theme_bw() +
+  facet_wrap(~label, labeller = labeller(label = labels_personalizados))
+
+p <- ggplot(padroes_ts_samples_tile_034018_g4$time_series, 
+            aes(x = time, y = values, label = label)) +
+  geom_line(linewidth = 1.2) +
+  theme_bw() +
+  facet_wrap(~ label, labeller = labeller(label = c(
+    "veg_natural" = "Vegetação Natural",
+    "supressao" = "Área Suprimida"
+  )))
 
 # Balanceamento de amostras ----------------------------------------------------------------------------------------------------------------
 
@@ -155,13 +168,14 @@ cubo_samples_tile_034018_bal_g4 <- sits_reduce_imbalance(
   n_samples_under = 190) 
 
 summary(cubo_samples_tile_034018_g4)
+summary(cubo_samples_tile_034018_bal_g4)
 
 # Gerar SOM do tile 034018 -----------------------------------------------------------------------------------------------------------------
 
 ## Definir cores das classes
 
 sits_colors_set(tibble(
-  name = c("Supressao", "Veg_Natural"),
+  name = c("supressao", "veg_natural"),
   color = c("#bf812d", "#01665e")))
 
 # Clustering de séries temporais - SOM
@@ -255,7 +269,7 @@ som_cluster_limpo_034018_g4 <- sits_som_map(
   distance = "dtw", # Método para calcular a distância
   rlen = 20) # Número de iterações
 
-windows(width = 10, height = 6)
+windows(width = 9, height = 7)
 
 plot(som_cluster_limpo_034018_g4, band = "DBSI")
 plot(som_cluster_limpo_034018_g4, band = "NDVI")
@@ -271,10 +285,16 @@ avaliacao_som_limpo_034018_g4 <- sits_som_evaluate_cluster(som_cluster_limpo_034
 
 # Gráficos
 
-plot(avaliacao_som_034018_g4)
+p1 <- plot(avaliacao_som_034018_g4)
+p1 + theme(axis.text = element_text(color = "black"),
+           legend.position = "top", title = element_blank())
+
 avaliacao_som_034018_g4
 
-plot(avaliacao_som_limpo_034018_g4)
+p2 <- plot(avaliacao_som_limpo_034018_g4)
+p2 + theme(axis.text = element_text(color = "black"),
+           legend.position = "top", title = element_blank())
+
 avaliacao_som_limpo_034018_g4
 
 # Classificações ---------------------------------------------------------------------------------------------------------------------------
