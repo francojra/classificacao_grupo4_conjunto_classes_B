@@ -35,6 +35,8 @@ caatinga_class <- sits_cube(
     labels = c("1" = "supressao", # Definir os pixels da imagem
                "2" = "veg_natural"))
 
+view(caatinga_class$file_info)
+
 ## Definir cores das classes
 
 sits_colors_set(tibble(
@@ -86,7 +88,7 @@ prodes_2020 <- sits_cube(
     bands = "class",
     version = "v2", # Versão do mapa PRODES para não confundir com mapa classificado
     labels = c("1" = "supressao", "2" = "veg_natural", "3" = "mascara"))
-
+  
 view(prodes_2020$labels)
 
 ## Definir cores:
@@ -107,7 +109,7 @@ caatinga_rec_2020 <- sits_reclassify(
     cube = caatinga_class,
     mask = prodes_2020,
     rules = list("vegetação natural" = mask == "veg_natural",
-      "supressao 2000 - 2019" = mask == "supressao",
+                 "supressao 2000 - 2019" = mask == "supressao",
                  "supressao 2020" = cube == "supressao"),
     multicores = 1,
     output_dir = tempdir_r,
@@ -125,51 +127,3 @@ sits_colors_set(tibble(
 
 plot(caatinga_rec_2020,
      legend_text_size = 0.85)
-
-# ### ---------------------------------------------------------------------
-
-# Considerando mascaras nas áreas externas a NA -----------------------------
-
-tempdir_r <- "cl_reclassification"
-dir.create(tempdir_r, showWarnings = FALSE)
-getwd()
-
-mask_cube <- sits_cube(
-  source = "BDC",
-  collection = "SENTINEL-2-16D",
-  data_dir = tempdir_r,
-  parse_info = c("satellite", "sensor", "tile", "start_date", 
-                 "end_date", "band", "version"),
-  bands = "class",
-  version = "v2", ##essa é a máscara com valor 3 na área dora da máscara 
-  labels = c("1" = "Mascara_Supressao", 
-             "2" = "Mascara_Vegetacao", 
-             "3" = "Fora_Mascara"),
-  tiles = "034018",
-  start_date = "2020-01-01",
-  end_date = "2020-12-31"
-)
-
-# Nova reclassificação para unir as classes da máscara
-# Reclassificar mantendo as classes fora da máscara e unificando o interior como "Mascara"
-
-class_map_final2 <- sits_reclassify(
-  cube = caatinga_class,
-  mask = mask_cube,  # máscara com 1, 2, e 3 (Fora_Mascara)
-  rules = list(
-    "Mascara"     = mask %in% c("Mascara_Supressao", "Mascara_Vegetacao"), #vai agrupar vegetação e supressão da máscara
-    "supressao"   = mask == "Fora_Mascara" & cube == "supressao",
-    "veg_natural" = mask == "Fora_Mascara" & cube == "veg_natural"
-  ),
-  output_dir = tempdir_r,
-  version = "class_map_final7"
-)
-
-
-sits_colors_set(tibble::tibble(
-  name  = c("supressao", "veg_natural", "Mascara"),
-  color = c("#8E44AD", "#2ECC71", "#BDC3C7")  # violeta, verde, cinza
-))
-
-
-plot(class_map_final2, legend_text_size = 0.8)
